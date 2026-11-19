@@ -1,0 +1,15 @@
+\begin{tabular}{llrrrrrr}
+\toprule
+Scenario & Level & Runs & With loss & Lost (mean) & Unacknowl.\ rows & Promotion (s) & Writes resume (s) \\
+\midrule
+crash only & \textsc{async} & 5 & 0 & 0 & 0 (0 runs) & 102.7--103.9 & 103.2--105.8 \\
+crash only & \textsc{sync\_1} & 5 & 0 & 0 & 0 (0 runs) & 102.9--103.5 & 104.5--109.5 \\
+isolation 1\,s & \textsc{async} & 3 & 3 & 2053 & 0 (0 runs) & 5.4--6.6 & 6.2--9.1 \\
+isolation 1\,s & \textsc{sync\_1} & 3 & 0 & 0 & 13 (2 runs) & 2.6--6.5 & 9.0--14.1 \\
+isolation 2\,s & \textsc{async} & 6 & 6 & 4074 & 0 (0 runs) & 2.5--4.6 & 3.8--7.4 \\
+isolation 2\,s & \textsc{sync\_1} & 6 & 0 & 0 & 12 (2 runs) & 3.2--6.3 & 5.2--28.1 \\
+isolation 2\,s & \textsc{sync\_2} & 6 & 0 & 0 & 21 (4 runs) & 2.7--7.8 & 9.1--31.7 \\
+isolation 5\,s & \textsc{async} & 3 & 3 & 10842 & 0 (0 runs) & 2.6--2.8 & 3.1--3.4 \\
+isolation 5\,s & \textsc{sync\_1} & 3 & 0 & 0 & 0 (0 runs) & 3.9--5.7 & 10.7--12.4 \\
+\bottomrule
+\end{tabular}

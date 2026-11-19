@@ -1,0 +1,9 @@
+Date: 2026-11-07T22:06:55
+CPU: Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz
+RAM (GB): 15.8
+OS: Microsoft Windows 11 Professionnel 10.0.26200
+Docker: 28.3.2
+kind: kind v0.20.0 go1.20.4 windows/amd64
+kubectl:     "gitVersion": "v1.28.0",
+Docker memory (bytes): 10431373312
+wslconfig: [wsl2] | memory=10GB | processors=6

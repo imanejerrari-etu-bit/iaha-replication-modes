@@ -1,0 +1,17 @@
+# nodeName is filled in by place_client.ps1: the client must run on the SAME node
+# as the PostgreSQL primary, so that emulated network delay only affects replication
+# traffic between nodes (not the client <-> primary path).
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pgbench-client
+  namespace: default
+spec:
+  nodeName: __NODE__
+  containers:
+    - name: pgbench
+      image: postgres:16.1
+      command: ["sleep", "infinity"]
+      resources:
+        requests: {cpu: "500m", memory: 256Mi}
+        limits:   {cpu: "1", memory: 512Mi}

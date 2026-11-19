@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the article below."
+title: "What Replication Modes Cost and Protect: replication package"
+authors:
+  - family-names: Jerrari
+    given-names: Imane
+  - family-names: Assayad
+    given-names: Ismail
+license: MIT
+repository-code: "https://github.com/imanejerrari-etu-bit/iaha-replication-modes"
+version: "1.0.0"
+date-released: "2026-11-13"
+# add `doi:` (Zenodo) after the first GitHub release

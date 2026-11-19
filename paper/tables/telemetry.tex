@@ -1,0 +1,26 @@
+\begin{table}[t]
+\centering\small
+\begin{tabular}{llccc}
+\toprule
+Mode & Workload & CPU of primary, \% of limit [range over delays] & Memory, \% of limit & Active connections \\
+\midrule
+\textsc{performance} & \textsc{write} & 99 (99--100) & 99 & 6.2 \\
+\textsc{performance} & \textsc{readmostly} & 100 (100--100) & 98 & 3.2 \\
+\textsc{performance} & \textsc{low} & 15 (15--15) & 97 & 1.1 \\
+\addlinespace
+\textsc{consistency} & \textsc{write} & 71 (49--95) & 99 & 8.0 \\
+\textsc{consistency} & \textsc{readmostly} & 100 (100--100) & 99 & 3.9 \\
+\textsc{consistency} & \textsc{low} & 18 (17--19) & 99 & 1.6 \\
+\addlinespace
+\textsc{availability} & \textsc{write} & 72 (50--96) & 99 & 8.0 \\
+\textsc{availability} & \textsc{readmostly} & 36 (21--56) & 99 & 2.7 \\
+\textsc{availability} & \textsc{low} & 14 (14--15) & 99 & 1.7 \\
+\addlinespace
+\textsc{economic} & \textsc{write} & 100 & 99 & 5.8 \\
+\textsc{economic} & \textsc{readmostly} & 100 & 99 & 3.2 \\
+\textsc{economic} & \textsc{low} & 13 & 99 & 1.1 \\
+\bottomrule
+\end{tabular}
+\caption{Telemetry of the primary during the grid (means over repetitions; CPU as a percentage of the one-CPU limit).}
+\label{tab:telemetry}
+\end{table}

@@ -1,0 +1,29 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: iaha-pg
+  namespace: default
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1
+  minSyncReplicas: 0     # run_pilot.py switches between async (0/0) and sync (2/2)
+  maxSyncReplicas: 0
+  bootstrap:
+    initdb:
+      database: app
+      owner: app
+  storage:
+    size: 2Gi
+  resources:             # FIXED resources: essential to limit noise
+    requests: {cpu: "1", memory: 1Gi}
+    limits:   {cpu: "1", memory: 1Gi}
+  postgresql:
+    parameters:
+      shared_buffers: "256MB"
+      max_connections: "100"
+  startDelay: 300
+  stopDelay: 300
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: required
