@@ -41,3 +41,6 @@ One host, emulated network delay, three synthetic pgbench workloads, nine contex
 
 ## Licenses
 Code: MIT (`LICENSE`). Data: CC BY 4.0 (`LICENSE-DATA.md`).
+
+## Manuscript versions
+`paper/` holds the manuscript in the Elsevier `elsarticle` layout. `paper_computing/` is a flat folder (no subfolders) in the Springer one-column layout (`svjour3`, option `smallextended`) built from it by `paper/build_computing.py`; compile `paper_computing/main.tex` with the journal's template files.

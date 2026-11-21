@@ -1,0 +1,21 @@
+\begin{tabular}{llrrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{\textsc{write}} & \multicolumn{3}{c}{\textsc{readmostly}} & \textsc{low} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-7}\cmidrule(lr){8-8}
+Mode & Delay (ms) & tps$_w$ & p95$_w$ & tps$_w$ & tps$_r$ & p95$_w$ & p95$_w$ \\
+\midrule
+\textsc{perf.} & 0 & 473 & 51.1 & 107 & 3071 & 69.0 & 11.8 \\
+\textsc{perf.} & 5 & 483 & 48.6 & 110 & 3174 & 66.4 & 11.3 \\
+\textsc{perf.} & 10 & 506 & 48.1 & 114 & 3260 & 67.0 & 10.8 \\
+\addlinespace
+\textsc{cons.} & 0 & 380 & 45.6 & 70 & 3406 & 77.8 & 20.0 \\
+\textsc{cons.} & 5 & 270 & 58.7 & 44 & 3900 & 85.0 & 48.9 \\
+\textsc{cons.} & 10 & 184 & 83.1 & 33 & 4111 & 100.7 & 139.9 \\
+\addlinespace
+\textsc{avail.} & 0 & 392 & 45.5 & 181 & 5946 & 19.3 & 18.0 \\
+\textsc{avail.} & 5 & 270 & 59.5 & 106 & 554 & 29.7 & 49.0 \\
+\textsc{avail.} & 10 & 186 & 83.3 & 68 & 287 & 48.5 & 114.3 \\
+\addlinespace
+\textsc{econ.} & 0$^{*}$ & 556 & 50.4 & 122 & 3393 & 69.0 & 11.2 \\
+\bottomrule
+\end{tabular}

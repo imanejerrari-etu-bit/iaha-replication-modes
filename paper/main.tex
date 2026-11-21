@@ -4,9 +4,9 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{xcolor}
+\usepackage[hyphens]{url}
 \usepackage[hidelinks]{hyperref}
-\usepackage{url}
-\newcommand{\repourl}{https://github.com/imanejerrari-etu-bit/iaha-replication-modes}  % set once, then run check_release.py
+\Urlmuskip=0mu plus 1mu\relax
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}   % remove every \todo before submission
 \newcommand{\perf}{\textsc{performance}}
 \newcommand{\cons}{\textsc{consistency}}
@@ -48,7 +48,7 @@ We ask four questions.
 \end{description}
 
 \paragraph{Contributions}
-(1) A measured cost--protection profile of four replication modes on containerised PostgreSQL, including the dependence of data loss on isolation duration and of the synchronous cost on client concurrency. (2) A labelling protocol that derives the best mode per context from measurements and declared requirements, with bootstrap confidence, sensitivity analysis and explicit detection of infeasible contexts. (3) A replay evaluation showing that no fixed mode meets the declared requirements everywhere and that a static rule cascade violates them in 13--47\% of steps depending on the policy. (4) The scripts, raw data and analysis code, released as an artefact (Section~\ref{sec:avail}).
+(1) A measured cost--protection profile of four replication modes on containerised PostgreSQL, including the dependence of data loss on isolation duration and of the synchronous cost on client concurrency. (2) A labelling protocol that derives the best mode per context from measurements and declared requirements, with bootstrap confidence, sensitivity analysis and explicit detection of infeasible contexts. (3) A replay evaluation showing that no fixed mode meets the declared requirements everywhere and that a static rule cascade violates them in 13--47\% of steps depending on the policy. (4) The scripts, raw data and analysis code, released as an artefact (see Availability of data and code).
 
 \paragraph{Relation to our earlier papers}
 The framework and four mode definitions come from \cite{jerrari2026iaha}; \cite{jerrari2026cross} tested, on synthetic data from one generator, whether classifier behaviour is consistent across database engines. The present paper uses no synthetic labels, studies PostgreSQL only, and reuses from the earlier work the mode semantics and the rule cascade (as a baseline). All measurements, analyses and results reported here are new.
@@ -209,7 +209,7 @@ Promotion was fast in all configurations (medians 2.7--5.9\,s). Writes resumed l
 \subsection{Measured best mode per context (RQ3)}
 \begin{table}[t]
 \centering\small
-\begin{tabular}{llll}
+\resizebox{\textwidth}{!}{\begin{tabular}{llll}
 \toprule
 Workload & Requirements & Label (0, 5, 10\,ms) & Bootstrap confidence \\
 \midrule
@@ -217,7 +217,7 @@ Workload & Requirements & Label (0, 5, 10\,ms) & Bootstrap confidence \\
 \textsc{readmostly} & HA & \perf, \perf, \perf & 100\%, 100\%, 100\% \\
 \textsc{write} & durable, HA & \cons, \cons, \cons & 96\%, 99\%, 100\% \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Labels under the \textsc{balanced} policy with a 100\,ms p95 write bound. Confidence is the share of bootstrap resamples (over repetitions) giving the same label.}\label{tab:labels}
 \end{table}
 
@@ -268,7 +268,10 @@ Under none of our policies is \avail\ the selected mode, and it is indistinguish
 We measured what four replication modes cost and protect on containerised PostgreSQL, derived the best mode per context from measurements under declared requirements, and replayed controllers on the measured outcomes. Asynchronous replication lost about 2,000 acknowledged transactions per second of isolation while synchronous replication lost none (though 8 of 18 synchronous runs left some unacknowledged rows on the new primary), and a crash without isolation lost nothing in either mode; the loss scaled with the write rate. The synchronous price was a latency price of about one network round trip per commit when the primary is not saturated, which translated into a throughput price that grew with inter-node delay and shrank, without vanishing, as client concurrency saturated the primary. No fixed mode met the requirements everywhere, a static rule cascade violated them in 13--47\% of steps, and one context had no feasible durable mode. Future work should evaluate a closed-loop controller on a multi-host cluster with real network delay, measure the cost of mode transitions, test readers placed on standbys, and use production traces.
 
 \section*{Availability of data and code}\label{sec:avail}
-Scripts, raw measurements and analysis code are available at \url{\repourl} (code under the MIT licence, data under CC BY 4.0), with an archived release on Zenodo.
+Scripts, raw measurements and analysis code are available at \url{https://github.com/imanejerrari-etu-bit/iaha-replication-modes} (code under the MIT licence, data under CC BY 4.0), with an archived release on Zenodo.
+
+\section*{CRediT authorship contribution statement}
+\textbf{Imane Jerrari:} Conceptualization, Investigation, Data curation, Validation, Writing -- review \& editing. \textbf{Ismail Assayad:} Conceptualization, Supervision, Writing -- review \& editing.
 
 \section*{Declaration of competing interest}
 The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.

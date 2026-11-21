@@ -32,9 +32,9 @@ for m in order:
         rows.append(r"%s & \textsc{%s} & %s & %.0f & %.1f \\" % (tex[m], wl.lower(), cpu,
                                                                   g["f_mem_pct"].mean(), g["f_conn_active"].mean()))
     rows.append(r"\addlinespace")
-table = (r"\begin{table}[t]" "\n" r"\centering\small" "\n" r"\begin{tabular}{llccc}" "\n" r"\toprule" "\n"
+table = (r"\begin{table}[t]" "\n" r"\centering\small" "\n" r"\resizebox{\textwidth}{!}{\begin{tabular}{llccc}" "\n" r"\toprule" "\n"
          r"Mode & Workload & CPU of primary, \% of limit [range over delays] & Memory, \% of limit & Active connections \\" "\n"
-         r"\midrule" "\n" + "\n".join(rows[:-1]) + "\n" r"\bottomrule" "\n" r"\end{tabular}" "\n"
+         r"\midrule" "\n" + "\n".join(rows[:-1]) + "\n" r"\bottomrule" "\n" r"\end{tabular}}" "\n"
          r"\caption{Telemetry of the primary during the grid (means over repetitions; CPU as a percentage of the one-CPU limit).}"
          "\n" r"\label{tab:telemetry}" "\n" r"\end{table}" "\n")
 open(os.path.join(a.out, "telemetry.tex"), "w").write(table)
