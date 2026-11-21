@@ -2,7 +2,7 @@
 
 Scripts, data layout and manuscript for the article *What Replication Modes Cost and Protect: A Measurement
 Study of Containerised PostgreSQL and Its Implications for Adaptive Mode Selection* (Jerrari and Assayad).  
-Manuscript in preparation. Archived release: Zenodo DOI (added at release).
+Manuscript in preparation.
 
 ## What this repository contains
 - `k8s/`, `setup.ps1`, `place_client.ps1`, `cleanup.ps1`: a local testbed (kind, 1 control-plane + 3 workers, CloudNativePG v1.22.0, PostgreSQL 16.1, a pgbench client on the primary's node).

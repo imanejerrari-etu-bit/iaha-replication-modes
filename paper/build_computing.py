@@ -48,13 +48,12 @@ decl = r"""\section*{Statements and Declarations}
 \paragraph{Funding} The authors did not receive support from any organization for the submitted work.
 \paragraph{Competing interests} The authors have no relevant financial or non-financial interests to disclose.
 \paragraph{Author contributions} Both authors contributed to the study conception. Imane Jerrari ran all experiments, analysed and checked the results and prepared the manuscript with the help of an AI assistant (see Method). Ismail Assayad supervised the work and reviewed the manuscript. Both authors approved the final version.
-\paragraph{Data availability} The measurements generated and analysed in this study are available at \url{https://github.com/imanejerrari-etu-bit/iaha-replication-modes} (data under CC BY 4.0), with an archived release on Zenodo \todo{Zenodo DOI after the release}.
+\paragraph{Data availability} The measurements generated and analysed in this study are available at \url{https://github.com/imanejerrari-etu-bit/iaha-replication-modes} (data under CC BY 4.0).
 \paragraph{Code availability} The scripts used to run the experiments and the analysis code are available in the same repository (MIT licence).
 
 """
 s = s[:i] + decl + s[j:]
 rep(r"\bibliographystyle{elsarticle-num}", r"\bibliographystyle{spmpsci}")
-s = s.replace(r"\todo{Zenodo DOI after the release}", r"[Zenodo DOI to be added after the release]")  # plain text: no red macro in the submission
 
 # ------------------------------------------------------------------ tables: flat inputs, compact generators
 for tab in ["grid", "telemetry", "telemetry_text"]:
