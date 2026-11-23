@@ -23,6 +23,7 @@ pre = r"""\documentclass[smallextended]{svjour3}
 abstract = re.search(r"\\begin\{abstract\}\n(.*?)\\end\{abstract\}", s, re.S).group(1).strip()
 front = r"""\begin{document}
 \title{What Replication Modes Cost and Protect: A Measurement Study of Containerised PostgreSQL and Its Implications for Adaptive Mode Selection}
+\titlerunning{What Replication Modes Cost and Protect}
 \author{Imane Jerrari \and Ismail Assayad}
 \authorrunning{I. Jerrari, I. Assayad}
 \institute{I. Jerrari (corresponding author) \at Laboratory of Information Systems (LIS), Faculty of Sciences Ain Chock \& ENSEM, Hassan II University of Casablanca, Casablanca, Morocco \\ \email{imane.jerrari-etu@etu.univh2c.ma} \and
@@ -50,10 +51,12 @@ decl = r"""\section*{Statements and Declarations}
 \paragraph{Author contributions} Both authors contributed to the study conception. Imane Jerrari ran all experiments, analysed and checked the results and prepared the manuscript with the help of an AI assistant (see Method). Ismail Assayad supervised the work and reviewed the manuscript. Both authors approved the final version.
 \paragraph{Data availability} The measurements generated and analysed in this study are available at \url{https://github.com/imanejerrari-etu-bit/iaha-replication-modes} (data under CC BY 4.0).
 \paragraph{Code availability} The scripts used to run the experiments and the analysis code are available in the same repository (MIT licence).
+\paragraph{Use of AI tools} An AI assistant (Claude, Anthropic) was used to help write the measurement and analysis scripts, to help analyse the results and to draft and edit parts of the text, as described in the Method section. The authors ran all experiments, reviewed the scripts and the text, and take full responsibility for the manuscript's content. No AI tool is listed as an author.
 
 """
 s = s[:i] + decl + s[j:]
 rep(r"\bibliographystyle{elsarticle-num}", r"\bibliographystyle{spmpsci}")
+rep(r"(see Availability of data and code)", r"(see Statements and Declarations)")
 
 # ------------------------------------------------------------------ tables: flat inputs, compact generators
 for tab in ["grid", "telemetry", "telemetry_text"]:
@@ -76,7 +79,9 @@ def run_patched(script, subs):
     exec(compile(src, script, "exec"), {"__name__": "__main__"})
 run_patched("make_figures.py", [("figsize=(7.2, 4.2)", "figsize=(4.8, 3.9)"), ("figsize=(7.0, 2.7)", "figsize=(4.8, 3.0)"),
     ('"font.size": 8', '"font.size": 7'), ("figures/fig_grid.pdf", "../paper_computing/fig_grid.pdf"),
-    ("figures/fig_loss.pdf", "../paper_computing/fig_loss.pdf"), ("figures/fig_replay.pdf", "../paper_computing/fig_replay.pdf")])
+    ("figures/fig_loss.pdf", "../paper_computing/fig_loss.pdf"), ("figures/fig_replay.pdf", "../paper_computing/fig_replay.pdf"),
+    ('[o.replace("fixed ", "fixed\\n") for o in order]', '[{"fixed PERFORMANCE": "fixed\\nperf.", "fixed CONSISTENCY": "fixed\\ncons.", "fixed AVAILABILITY": "fixed\\navail.", "fixed ECONOMIC": "fixed\\necon."}.get(o, o) for o in order]'),
+    ('ax[1][2].text(10, 103, "bound 100 ms", ha="right"', 'ax[1][2].text(0.2, 103, "bound 100 ms", ha="left"')])
 run_patched("make_sweep.py", [("figsize=(7.2, 2.9)", "figsize=(4.8, 3.1)"), ('"font.size": 8', '"font.size": 7'),
     ("figures/fig_sweep.pdf", "../paper_computing/fig_sweep.pdf"), ('open("tables/sweep.tex", "w")', 'open(os.devnull, "w")'),
     ("ncol=5, fontsize=6.5", "ncol=5, fontsize=5.8"), ("(0.5, -0.07)", "(0.5, -0.10)")])
@@ -192,4 +197,23 @@ Workload & Requirements & Label (same at 0, 5, 10\,ms) & Confidence, \% (0, 5, 1
 \end{tabular}""" + s[b:]
 s = s.replace(r"\includegraphics[width=0.55\textwidth]{fig_loss.pdf}", r"\includegraphics[width=0.8\textwidth]{fig_loss.pdf}")
 write("main.tex", s)
+
+# ------------------------------------------------------------------ bibliography inlined (the submission system has no spmpsci.bst)
+import subprocess, tempfile
+def inline_bibliography(text):
+    tmp = tempfile.mkdtemp()
+    for f in os.listdir(OUT):
+        shutil.copy(os.path.join(OUT, f), tmp)
+    emu = (r"\documentclass[10pt,a4paper]{article}" "\n" r"\newcommand{\smartqed}{}\newcommand{\institute}[1]{}\newcommand{\at}{}\newcommand{\email}[1]{}"
+           r"\newcommand{\authorrunning}[1]{}\newcommand{\titlerunning}[1]{}\renewcommand{\date}[1]{}\newcommand{\keywords}[1]{}" "\n")
+    t = text.replace(r"\documentclass[smallextended]{svjour3}" "\n" r"\smartqed" "\n", emu, 1)
+    t = t.replace(r"\bibliographystyle{spmpsci}", r"\bibliographystyle{unsrt}")
+    open(os.path.join(tmp, "stub.tex"), "w", encoding="utf-8").write(t)
+    for cmd in (["pdflatex", "-interaction=nonstopmode", "stub.tex"], ["bibtex", "stub"]):
+        subprocess.run(cmd, cwd=tmp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    bbl = open(os.path.join(tmp, "stub.bbl"), encoding="utf-8").read()
+    assert r"\begin{thebibliography}" in bbl and bbl.count(r"\bibitem") >= 20, "bibliography not generated"
+    return text.replace(r"\bibliographystyle{spmpsci}" "\n" r"\bibliography{refs}", bbl.strip())
+s = open(os.path.join(OUT, "main.tex"), encoding="utf-8").read()
+write("main.tex", inline_bibliography(s))
 print("written", OUT, "| leftover resizebox:", s.count("resizebox"), "| tables/ refs:", s.count("tables/"))

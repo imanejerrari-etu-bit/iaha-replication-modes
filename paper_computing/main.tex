@@ -16,6 +16,7 @@
 \emergencystretch=3em
 \begin{document}
 \title{What Replication Modes Cost and Protect: A Measurement Study of Containerised PostgreSQL and Its Implications for Adaptive Mode Selection}
+\titlerunning{What Replication Modes Cost and Protect}
 \author{Imane Jerrari \and Ismail Assayad}
 \authorrunning{I. Jerrari, I. Assayad}
 \institute{I. Jerrari (corresponding author) \at Laboratory of Information Systems (LIS), Faculty of Sciences Ain Chock \& ENSEM, Hassan II University of Casablanca, Casablanca, Morocco \\ \email{imane.jerrari-etu@etu.univh2c.ma} \and
@@ -41,7 +42,7 @@ We ask four questions.
 \end{description}
 
 \paragraph{Contributions}
-(1) A measured cost--protection profile of four replication modes on containerised PostgreSQL, including the dependence of data loss on isolation duration and of the synchronous cost on client concurrency. (2) A labelling protocol that derives the best mode per context from measurements and declared requirements, with bootstrap confidence, sensitivity analysis and explicit detection of infeasible contexts. (3) A replay evaluation showing that no fixed mode meets the declared requirements everywhere and that a static rule cascade violates them in 13--47\% of steps depending on the policy. (4) The scripts, raw data and analysis code, released as an artefact (see Availability of data and code).
+(1) A measured cost--protection profile of four replication modes on containerised PostgreSQL, including the dependence of data loss on isolation duration and of the synchronous cost on client concurrency. (2) A labelling protocol that derives the best mode per context from measurements and declared requirements, with bootstrap confidence, sensitivity analysis and explicit detection of infeasible contexts. (3) A replay evaluation showing that no fixed mode meets the declared requirements everywhere and that a static rule cascade violates them in 13--47\% of steps depending on the policy. (4) The scripts, raw data and analysis code, released as an artefact (see Statements and Declarations).
 
 \paragraph{Relation to our earlier papers}
 The framework and four mode definitions come from \cite{jerrari2026iaha}; \cite{jerrari2026cross} tested, on synthetic data from one generator, whether classifier behaviour is consistent across database engines. The present paper uses no synthetic labels, studies PostgreSQL only, and reuses from the earlier work the mode semantics and the rule cascade (as a baseline). All measurements, analyses and results reported here are new.
@@ -65,7 +66,7 @@ Performance results on shared hosts are sensitive to warm-up, ordering and drift
 \section{Method}\label{sec:method}
 \paragraph{Use of an AI assistant.} An AI assistant (Claude, Anthropic) was used to help write the measurement and analysis scripts, to help analyse the results and to draft and edit parts of the text. The authors ran all experiments on their own testbed, reviewed the scripts and the text, and take full responsibility for the content of this article. The scripts are part of the replication package (see Statements and Declarations).
 \subsection{Testbed}
-All experiments ran on one laptop (Intel Core i5-8250U, 4 cores/8 threads, 16\,GB RAM) under Windows~11 with WSL2 and Docker Desktop, using kind to run a Kubernetes cluster of one control-plane node and three worker nodes. PostgreSQL~16.1 was deployed with CloudNativePG v1.22.0 with three instances at most, each limited to one CPU and 1\,GiB of memory (\texttt{shared\_buffers} 256\,MB, 2\,GiB volume). Software versions are listed in the artefact. Docker 28.3.2, kind v0.20.0 (node image Kubernetes v1.27.3) and kubectl v1.28.0; WSL2 was limited to 6 processors and 10\,GB of memory. Python 3.13.14 and scikit-learn 1.9.1
+All experiments ran on one laptop (Intel Core i5-8250U, 4 cores/8 threads, 16\,GB RAM) under Windows~11 with WSL2 and Docker Desktop, using kind to run a Kubernetes cluster of one control-plane node and three worker nodes. PostgreSQL~16.1 was deployed with CloudNativePG v1.22.0 with three instances at most, each limited to one CPU and 1\,GiB of memory (\texttt{shared\_buffers} 256\,MB, 2\,GiB volume). Software versions: Docker 28.3.2, kind v0.20.0 (node image Kubernetes v1.27.3), kubectl v1.28.0, Python 3.13.14 and scikit-learn 1.9.1; WSL2 was limited to 6 processors and 10\,GB of memory.
 
 Inter-node network delay was emulated with \texttt{tc netem} \cite{hemminger2005} on the egress interface of each worker node, with one-way delays of 0, 5 and 10\,ms (so the round trip between nodes is twice the delay). Anti-affinity places the PostgreSQL instances on distinct workers. The load generator (pgbench, scale factor 10) runs in a pod placed on the same node as the primary, so that the emulated delay affects replication traffic but not the client--primary path. We checked this: in the pilot, the throughput of the asynchronous mode changed by $+1.2\%$ between 0 and 5\,ms (533 versus 540\,tps).
 
@@ -269,7 +270,171 @@ We measured what four replication modes cost and protect on containerised Postgr
 \paragraph{Author contributions} Both authors contributed to the study conception. Imane Jerrari ran all experiments, analysed and checked the results and prepared the manuscript with the help of an AI assistant (see Method). Ismail Assayad supervised the work and reviewed the manuscript. Both authors approved the final version.
 \paragraph{Data availability} The measurements generated and analysed in this study are available at \url{https://github.com/imanejerrari-etu-bit/iaha-replication-modes} (data under CC BY 4.0).
 \paragraph{Code availability} The scripts used to run the experiments and the analysis code are available in the same repository (MIT licence).
+\paragraph{Use of AI tools} An AI assistant (Claude, Anthropic) was used to help write the measurement and analysis scripts, to help analyse the results and to draft and edit parts of the text, as described in the Method section. The authors ran all experiments, reviewed the scripts and the text, and take full responsibility for the manuscript's content. No AI tool is listed as an author.
 
-\bibliographystyle{spmpsci}
-\bibliography{refs}
+\begin{thebibliography}{10}
+
+\bibitem{pgdocs}
+{PostgreSQL Global Development Group}.
+\newblock {PostgreSQL} 16 documentation: High availability, load balancing, and
+  replication.
+\newblock \url{https://www.postgresql.org/docs/16/high-availability.html}.
+\newblock Accessed 2026.
+
+\bibitem{abadi2012}
+Daniel Abadi.
+\newblock Consistency tradeoffs in modern distributed database system design:
+  {CAP} is only part of the story.
+\newblock {\em IEEE Computer}, 45(2):37--42, 2012.
+
+\bibitem{cnpg}
+{CloudNativePG Contributors}.
+\newblock {CloudNativePG}: Cloud-native {PostgreSQL} operator for kubernetes.
+\newblock \url{https://cloudnative-pg.io/}.
+\newblock Accessed 2026.
+
+\bibitem{patroni}
+{Patroni Project}.
+\newblock Patroni: A template for {PostgreSQL} {HA}.
+\newblock \url{https://github.com/patroni/patroni}.
+\newblock Accessed 2025.
+
+\bibitem{repmgr}
+{repmgr Project}.
+\newblock repmgr: {PostgreSQL} replication manager.
+\newblock \url{https://repmgr.org/}.
+\newblock Accessed 2025.
+
+\bibitem{stolon}
+{Sorint.lab}.
+\newblock Stolon: {PostgreSQL} cloud native {HA}.
+\newblock \url{https://github.com/sorintlab/stolon}.
+\newblock Accessed 2025.
+
+\bibitem{jerrari2026iaha}
+Imane Jerrari and Ismail Assayad.
+\newblock {IAHA}: An intelligent adaptive high availability framework for
+  containerised {PostgreSQL} databases using hybrid machine learning.
+\newblock {\em Journal of Intelligent \& Fuzzy Systems}, 2026.
+\newblock Accepted for publication; DOI not yet assigned.
+
+\bibitem{jerrari2026cross}
+Imane Jerrari and Ismail Assayad.
+\newblock Testing the preconditions for cross-database generalisation of
+  machine learning-driven replication mode selection: A controlled synthetic
+  study across {PostgreSQL}, {MySQL}, and {MongoDB}.
+\newblock {\em International Journal of Data Science and Analytics}, 2026.
+\newblock Accepted for publication; DOI not yet assigned.
+
+\bibitem{gilbert2002}
+Seth Gilbert and Nancy Lynch.
+\newblock Brewer's conjecture and the feasibility of consistent, available,
+  partition-tolerant web services.
+\newblock {\em ACM SIGACT News}, 33(2):51--59, 2002.
+
+\bibitem{kephart2003}
+Jeffrey~O. Kephart and David~M. Chess.
+\newblock The vision of autonomic computing.
+\newblock {\em IEEE Computer}, 36(1):41--50, 2003.
+
+\bibitem{vanaken2017}
+Dana Van~Aken, Andrew Pavlo, Geoffrey~J. Gordon, and Bohan Zhang.
+\newblock Automatic database management system tuning through large-scale
+  machine learning.
+\newblock In {\em Proc. ACM SIGMOD}, pages 1009--1024, 2017.
+
+\bibitem{zhang2019}
+Ji~Zhang et~al.
+\newblock An end-to-end automatic cloud database tuning system using deep
+  reinforcement learning.
+\newblock In {\em Proc. ACM SIGMOD}, pages 415--432, 2019.
+
+\bibitem{kanellis2022}
+Konstantinos Kanellis, Cong Ding, Brian Kroth, Andreas M{\"u}ller, Carlo
+  Curino, and Shivaram Venkataraman.
+\newblock {LlamaTune}: Sample-efficient {DBMS} configuration tuning.
+\newblock {\em Proc. VLDB Endow.}, 15(11):2953--2965, 2022.
+
+\bibitem{lao2024}
+Jiale Lao, Yibo Wang, Yufei Li, Jianping Wang, Yunjia Zhang, Zhiyuan Cheng,
+  Wanghu Chen, Mingjie Tang, and Jianguo Wang.
+\newblock {GPTuner}: A manual-reading database tuning system via {GPT}-guided
+  {Bayesian} optimization.
+\newblock {\em Proc. VLDB Endow.}, 17(8):1939--1952, 2024.
+
+\bibitem{wang2021}
+Junxiong Wang, Immanuel Trummer, and Debabrota Basu.
+\newblock {UDO}: Universal database optimization using reinforcement learning.
+\newblock {\em Proc. VLDB Endow.}, 14(13):3402--3414, 2021.
+
+\bibitem{rzadca2020}
+Krzysztof Rzadca, Pawel Findeisen, Jacek Swiderski, Przemyslaw Zych, Przemyslaw
+  Broniek, Jarek Kusmierek, Pawel Nowak, Beata Strack, Piotr Witusowski, Steven
+  Hand, and John Wilkes.
+\newblock Autopilot: Workload autoscaling at {Google}.
+\newblock In {\em Proc. 15th European Conference on Computer Systems
+  (EuroSys)}, 2020.
+
+\bibitem{qiu2020}
+Haoran Qiu et~al.
+\newblock {FIRM}: An intelligent fine-grained resource management framework for
+  {SLO}-oriented microservices.
+\newblock In {\em Proc. USENIX OSDI}, pages 805--825, 2020.
+
+\bibitem{basiri2016}
+Ali Basiri, Niosha Behnam, Ruud de~Rooij, Lorin Hochstein, Luke Kosewski,
+  Justin Reynolds, and Casey Rosenthal.
+\newblock Chaos engineering.
+\newblock {\em IEEE Software}, 33(3):35--41, 2016.
+
+\bibitem{basiri2019}
+Ali Basiri, Lorin Hochstein, Nora Jones, and Haley Tucker.
+\newblock Automating chaos experiments in production.
+\newblock In {\em Proc. IEEE/ACM 41st International Conference on Software
+  Engineering: Software Engineering in Practice (ICSE-SEIP)}, 2019.
+
+\bibitem{alquraan2018}
+Ahmed Alquraan, Hatem Takruri, Mohammed Alfatafta, and Samer Al-Kiswany.
+\newblock An analysis of network-partitioning failures in cloud systems.
+\newblock In {\em 13th USENIX Symposium on Operating Systems Design and
+  Implementation (OSDI 18)}, pages 51--68, Carlsbad, CA, 2018. USENIX
+  Association.
+
+\bibitem{georges2007}
+Andy Georges, Dries Buytaert, and Lieven Eeckhout.
+\newblock Statistically rigorous {Java} performance evaluation.
+\newblock In {\em Proc. ACM OOPSLA}, 2007.
+
+\bibitem{kalibera2013}
+Tomas Kalibera and Richard Jones.
+\newblock Rigorous benchmarking in reasonable time.
+\newblock In {\em Proc. ACM ISMM}, 2013.
+
+\bibitem{hemminger2005}
+Stephen Hemminger.
+\newblock Network emulation with {NetEm}.
+\newblock In {\em Linux Conf Au}, 2005.
+
+\bibitem{breiman2001}
+Leo Breiman.
+\newblock Random forests.
+\newblock {\em Machine Learning}, 45(1):5--32, 2001.
+
+\bibitem{wilson1927}
+Edwin~B. Wilson.
+\newblock Probable inference, the law of succession, and statistical inference.
+\newblock {\em Journal of the American Statistical Association},
+  22(158):209--212, 1927.
+
+\bibitem{efron1979}
+Bradley Efron.
+\newblock Bootstrap methods: Another look at the jackknife.
+\newblock {\em The Annals of Statistics}, 7(1):1--26, 1979.
+
+\bibitem{cohen1960}
+Jacob Cohen.
+\newblock A coefficient of agreement for nominal scales.
+\newblock {\em Educational and Psychological Measurement}, 20(1):37--46, 1960.
+
+\end{thebibliography}
 \end{document}
